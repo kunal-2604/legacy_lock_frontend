@@ -29,7 +29,7 @@ export default function OAuthSuccess() {
     const tokenType = searchParams.get("tokenType") || "Bearer";
 
     if (!accessToken || !refreshToken) {
-      toast.error("Google login failed. Missing tokens.");
+      toast.error("Google sign-in could not be completed. Please try again.");
       navigate("/login", { replace: true });
       return;
     }
@@ -51,8 +51,8 @@ export default function OAuthSuccess() {
 
   return (
     <AuthLayout
-      eyebrow="Google OAuth"
-      title="Completing secure login"
+      eyebrow="Google Sign-in"
+      title="Completing sign-in"
       subtitle="Please wait while we prepare your workspace."
     >
       <div className="auth-status-center">

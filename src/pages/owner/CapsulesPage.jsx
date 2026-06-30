@@ -83,7 +83,7 @@ export default function CapsulesPage() {
           <p className="eyebrow">Owner Workspace</p>
           <h2>Capsules</h2>
           <p className="muted">
-            Create encrypted capsules, activate them, and prepare them for receivers.
+            Create private capsules, activate them, and prepare them for trusted receivers.
           </p>
         </div>
 
@@ -116,7 +116,7 @@ export default function CapsulesPage() {
           icon={<FileLock2 size={34} />}
           eyebrow="Capsules"
           title="No capsules found"
-          text="Create your first capsule to store encrypted legacy content."
+          text="Create your first capsule to store important legacy information."
           action={
             <Link to="/owner/capsules/new" className="glass-button primary">
               Create Capsule

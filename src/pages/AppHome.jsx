@@ -28,14 +28,13 @@ export default function AppHome() {
             Hi, <span className="gradient-text">{user?.name || user?.email}</span>
           </h2>
           <p className="muted">
-            Your account can work across secure owner actions and receiver access.
-            Choose where you want to continue.
+            Choose the workspace you want to use today. You can manage your own vault or view items shared with you.
           </p>
         </div>
 
         <div className="hero-security-card">
           <KeyRound size={22} />
-          <span>JWT protected session</span>
+          <span>Secure sign-in active</span>
         </div>
       </section>
 
@@ -50,8 +49,7 @@ export default function AppHome() {
               <p className="eyebrow">Owner Workspace</p>
               <h3>Create and control capsules</h3>
               <p className="muted">
-                Manage encrypted capsules, receiver contacts, files, check-ins,
-                and release policies.
+                Create capsules, manage trusted people, add files, and control when access is shared.
               </p>
             </div>
 
@@ -74,8 +72,7 @@ export default function AppHome() {
               <p className="eyebrow">Receiver Inbox</p>
               <h3>View released items</h3>
               <p className="muted">
-                Access capsules released to your email, download decrypted files,
-                and acknowledge receipt.
+                View items shared with your email, download files, and confirm receipt.
               </p>
             </div>
 
@@ -89,20 +86,20 @@ export default function AppHome() {
       <section className="security-grid">
         <SecurityCard
           icon={<MailCheck />}
-          title="Email verified"
-          text="Local accounts unlock only after email verification."
+          title="Verified account"
+          text="Your account is ready for secure workspace access."
           status="Active"
         />
         <SecurityCard
           icon={<FileLock2 />}
-          title="Encrypted capsules"
-          text="Capsule content and files stay protected by backend encryption."
+          title="Private capsules"
+          text="Your important messages and files stay protected."
           status="Protected"
         />
         <SecurityCard
           icon={<CheckCircle2 />}
-          title="Reminder ready"
-          text="Owner reminder timestamps appear in release policy timelines."
+          title="Release reminders"
+          text="Important release events are easy to review."
           status="Enabled"
         />
       </section>

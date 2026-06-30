@@ -52,9 +52,9 @@ export default function NewCapsulePage() {
       <section className="page-heading-row">
         <div>
           <p className="eyebrow">New Capsule</p>
-          <h2>Create encrypted capsule</h2>
+          <h2>Create private capsule</h2>
           <p className="muted">
-            Add private content now. Files and receivers will be attached in the next milestone.
+            Add the message or information you want to protect. Files and receivers can be added after creation.
           </p>
         </div>
 
@@ -71,7 +71,7 @@ export default function NewCapsulePage() {
           </div>
           <h3>Draft capsule</h3>
           <p className="muted">
-            The backend encrypts capsule content before storage. Keep the content clear and meaningful.
+            Write clear information so your receivers understand what matters when the time comes.
           </p>
         </div>
 

@@ -29,8 +29,7 @@ export default function Landing() {
               <span className="gradient-text">Release it only when it is time.</span>
             </h1>
             <p className="hero-description">
-              Create encrypted capsules, assign trusted receivers, attach secure
-              files, and control release through inactivity-based policies.
+              Store important messages and files, choose trusted receivers, and control when access should be shared.
             </p>
 
             <div className="hero-actions">
@@ -48,20 +47,19 @@ export default function Landing() {
               <LockKeyhole size={52} />
             </div>
 
-            <h2>Encrypted Capsule</h2>
+            <h2>Private Capsule</h2>
             <p className="muted">
-              Private content, trusted receivers, reminder emails, secure file
-              release, and full audit visibility.
+              A calm place for sensitive notes, trusted receivers, timely reminders, and clear access history.
             </p>
 
             <div className="mini-stats">
               <div>
-                <strong>256-bit</strong>
-                <span>Encryption ready</span>
+                <strong>Private</strong>
+                <span>Protected storage</span>
               </div>
               <div>
-                <strong>2 Roles</strong>
-                <span>Owner + Receiver</span>
+                <strong>Flexible</strong>
+                <span>Owner + receiver</span>
               </div>
             </div>
           </div>
@@ -70,8 +68,8 @@ export default function Landing() {
         <section className="feature-grid">
           <FeatureCard
             icon={<ShieldCheck />}
-            title="Encrypted capsules"
-            text="Keep messages and files protected until release conditions are met."
+            title="Private capsules"
+            text="Keep important notes and files safe until access is needed."
           />
           <FeatureCard
             icon={<UsersRound />}
@@ -80,8 +78,8 @@ export default function Landing() {
           />
           <FeatureCard
             icon={<LockKeyhole />}
-            title="Inactivity release"
-            text="Use check-ins, grace periods, and reminder emails before release."
+            title="Planned release"
+            text="Use check-ins, grace periods, and reminders before access is shared."
           />
         </section>
       </div>

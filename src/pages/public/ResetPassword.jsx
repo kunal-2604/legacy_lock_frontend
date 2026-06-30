@@ -33,7 +33,7 @@ export default function ResetPassword() {
     event.preventDefault();
 
     if (!token) {
-      toast.error("Reset token is missing from the URL.");
+      toast.error("Reset link is missing or incomplete.");
       return;
     }
 
@@ -105,7 +105,7 @@ export default function ResetPassword() {
       <form className="auth-form" onSubmit={handleSubmit}>
         {!token && (
           <div className="inline-alert danger">
-            Reset token is missing. Please request a new password reset link.
+            This reset link is missing information. Please request a new password reset link.
           </div>
         )}
 

@@ -24,18 +24,17 @@ export default function AuthLayout({
 
             <p className="eyebrow">Secure Digital Legacy</p>
             <h1>
-              Private capsules, trusted receivers, and controlled release.
+              Keep important information safe for the people who need it.
             </h1>
             <p className="muted">
-              LegacyLock keeps your important messages and files protected until
-              the right moment.
+              Create private capsules, choose trusted receivers, and stay in control of when access is shared.
             </p>
           </div>
 
           <div className="auth-security-strip">
-            <span>Email verification</span>
-            <span>Encrypted content</span>
-            <span>JWT refresh</span>
+            <span>Verified access</span>
+            <span>Private by design</span>
+            <span>Secure sign-in</span>
           </div>
         </section>
 

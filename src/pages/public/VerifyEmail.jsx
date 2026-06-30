@@ -27,7 +27,7 @@ export default function VerifyEmail() {
         setState({
           loading: false,
           success: false,
-          message: "Verification token is missing from the URL.",
+          message: "This verification link is missing information.",
         });
         return;
       }

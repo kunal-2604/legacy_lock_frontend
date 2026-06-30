@@ -125,8 +125,8 @@ export default function ReleasePolicyPanel({ capsuleId, onPolicyChange }) {
               <h4>{policy ? "Policy configured" : "No policy yet"}</h4>
               <p className="muted">
                 {policy
-                  ? "Backend scheduler will handle reminders and release."
-                  : "Create a policy to define inactivity and grace period."}
+                  ? "Reminders and access sharing are ready for this capsule."
+                  : "Create a policy to decide when access should be shared."}
               </p>
             </div>
 
@@ -135,7 +135,7 @@ export default function ReleasePolicyPanel({ capsuleId, onPolicyChange }) {
 
           <form className="policy-form" onSubmit={handleSave}>
             <label className="form-field">
-              <span>Inactivity days</span>
+              <span>Days without check-in</span>
               <input
                 className="glass-input"
                 type="number"
@@ -146,7 +146,7 @@ export default function ReleasePolicyPanel({ capsuleId, onPolicyChange }) {
             </label>
 
             <label className="form-field">
-              <span>Grace days</span>
+              <span>Reminder period in days</span>
               <input
                 className="glass-input"
                 type="number"

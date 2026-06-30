@@ -54,7 +54,7 @@ export default function FileListPanel({ capsuleId, refreshKey = 0 }) {
       <div className="panel-heading-row">
         <div>
           <p className="eyebrow">Capsule Files</p>
-          <h3>Encrypted attachments</h3>
+          <h3>Attached files</h3>
         </div>
 
         <button className="glass-button ghost" type="button" onClick={loadFiles}>
@@ -64,7 +64,7 @@ export default function FileListPanel({ capsuleId, refreshKey = 0 }) {
       </div>
 
       {loading ? (
-        <PageLoader title="Loading files..." text="Fetching encrypted attachments." />
+        <PageLoader title="Loading files..." text="Preparing your capsule files." />
       ) : files.length === 0 ? (
         <div className="mini-empty">
           <FileLock2 size={28} />
@@ -92,7 +92,7 @@ export default function FileListPanel({ capsuleId, refreshKey = 0 }) {
                 {file.encrypted && (
                   <span className="status-pill success">
                     <ShieldCheck size={13} />
-                    Encrypted
+                    Protected
                   </span>
                 )}
 

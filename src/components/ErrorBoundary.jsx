@@ -43,7 +43,7 @@ export default class ErrorBoundary extends Component {
           <h1>LegacyLock could not render this screen.</h1>
 
           <p className="muted">
-            Try refreshing the page. If the issue continues, check the browser console.
+            Please refresh the page. If the issue continues, try signing in again or contact support.
           </p>
 
           <button className="glass-button primary full-button" onClick={this.handleReload}>

@@ -100,7 +100,7 @@ export default function CapsuleDetailPage() {
           <p className="eyebrow">Capsule Detail</p>
           <h2>{loading ? "Loading capsule..." : capsule?.title || "Untitled Capsule"}</h2>
           <p className="muted">
-            Manage content, encrypted files, assigned receivers, release policy, and reminders.
+            Manage content, files, assigned receivers, release settings, and reminders.
           </p>
         </div>
 
@@ -188,7 +188,7 @@ export default function CapsuleDetailPage() {
                 </p>
 
                 <div className="setup-step-list">
-                  <span>1. Add encrypted files</span>
+                  <span>1. Add files</span>
                   <span>2. Assign receivers</span>
                   <span>3. Configure release policy</span>
                   <span>4. Monitor reminders</span>
@@ -204,7 +204,7 @@ export default function CapsuleDetailPage() {
               <div className="editor-side">
                 <h3>Capsule content</h3>
                 <p className="muted">
-                  Draft capsules can be edited. Active or released capsules may be restricted by backend rules.
+                  Draft capsules can be edited. Some changes may be limited after activation or release.
                 </p>
 
                 {isDraft && (

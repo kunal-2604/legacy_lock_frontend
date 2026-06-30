@@ -55,8 +55,7 @@ export default function OwnerDashboard() {
           <p className="eyebrow">Owner Dashboard</p>
           <h2>Control your secure legacy vault</h2>
           <p className="muted">
-            Create capsules, attach encrypted files, add receivers, and keep your
-            release policy safe with check-ins.
+            Create capsules, attach files, add receivers, and keep your release plan safe with check-ins.
           </p>
         </div>
 
@@ -98,7 +97,7 @@ export default function OwnerDashboard() {
           to="/owner/capsules"
           icon={<FileLock2 />}
           title="Manage capsules"
-          text="View, create, activate, and organize your encrypted capsules."
+          text="View, create, activate, and organize your private capsules."
         />
         <QuickAction
           to="/owner/receivers"

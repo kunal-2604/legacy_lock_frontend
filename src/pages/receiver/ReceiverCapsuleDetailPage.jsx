@@ -56,7 +56,7 @@ export default function ReceiverCapsuleDetailPage() {
           <p className="eyebrow">Receiver Inbox</p>
           <h2>{loading ? "Loading capsule..." : capsule?.title || "Released Capsule"}</h2>
           <p className="muted">
-            View decrypted capsule content, download files, and acknowledge receipt.
+            View capsule content, download files, and acknowledge receipt.
           </p>
         </div>
 
@@ -67,7 +67,7 @@ export default function ReceiverCapsuleDetailPage() {
       </section>
 
       {loading ? (
-        <PageLoader title="Loading released capsule..." text="Fetching decrypted receiver access." />
+        <PageLoader title="Loading released capsule..." text="Preparing your shared capsule." />
       ) : !capsule ? (
         <EmptyState
           title="Capsule unavailable"
@@ -107,7 +107,7 @@ export default function ReceiverCapsuleDetailPage() {
                 </div>
 
                 <div>
-                  <p className="eyebrow">Decrypted Content</p>
+                  <p className="eyebrow">Capsule Content</p>
                   <h3>{capsule.title || "Released Capsule"}</h3>
                   <p className="muted">{capsule.description || "No description provided."}</p>
                 </div>

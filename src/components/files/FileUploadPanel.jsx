@@ -23,7 +23,7 @@ export default function FileUploadPanel({ capsuleId, onUploaded }) {
 
     try {
       await fileApi.upload(capsuleId, selectedFile);
-      toast.success("File uploaded and encrypted.");
+      toast.success("File uploaded successfully.");
       setSelectedFile(null);
 
       if (inputRef.current) {
@@ -45,10 +45,10 @@ export default function FileUploadPanel({ capsuleId, onUploaded }) {
       </div>
 
       <div>
-        <p className="eyebrow">Encrypted File Upload</p>
+        <p className="eyebrow">File Upload</p>
         <h3>Attach secure files</h3>
         <p className="muted">
-          Files are sent as multipart upload. Backend encrypts bytes before storage.
+          Add supporting documents to this capsule. They will stay private until release.
         </p>
       </div>
 
@@ -73,7 +73,7 @@ export default function FileUploadPanel({ capsuleId, onUploaded }) {
       </label>
 
       <SubmitButton loading={uploading}>
-        {uploading ? "Uploading..." : "Upload Encrypted File"}
+        {uploading ? "Uploading..." : "Upload File"}
       </SubmitButton>
     </form>
   );

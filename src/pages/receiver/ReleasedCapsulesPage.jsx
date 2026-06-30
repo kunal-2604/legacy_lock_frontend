@@ -52,7 +52,7 @@ export default function ReleasedCapsulesPage() {
           <p className="eyebrow">Receiver Inbox</p>
           <h2>Released capsules</h2>
           <p className="muted">
-            Capsules released to your email appear here. Open one to view decrypted content and files.
+            Capsules released to your email appear here. Open one to view content and files.
           </p>
         </div>
       </section>

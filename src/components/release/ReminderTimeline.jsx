@@ -6,10 +6,10 @@ export default function ReminderTimeline({ policy }) {
   if (!policy) {
     return (
       <section className="glass-card reminder-panel">
-        <p className="eyebrow">Reminder Timeline</p>
+        <p className="eyebrow">Reminder Plan</p>
         <h3>No release policy yet</h3>
         <p className="muted">
-          Reminder milestones will appear after creating a release policy.
+          Reminder steps will appear after you create a release policy.
         </p>
       </section>
     );
@@ -20,10 +20,10 @@ export default function ReminderTimeline({ policy }) {
   if (graceDays === 0) {
     return (
       <section className="glass-card reminder-panel">
-        <p className="eyebrow">Reminder Timeline</p>
+        <p className="eyebrow">Reminder Plan</p>
         <h3>No grace-period reminders</h3>
         <p className="muted">
-          Grace days is 0, so release may happen immediately after inactivity deadline.
+          The reminder period is 0 days, so access may be shared immediately after the check-in deadline.
         </p>
       </section>
     );
@@ -55,10 +55,10 @@ export default function ReminderTimeline({ policy }) {
 
   return (
     <section className="glass-card reminder-panel">
-      <p className="eyebrow">Reminder Timeline</p>
-      <h3>Owner reminder emails</h3>
+      <p className="eyebrow">Reminder Plan</p>
+      <h3>Owner reminders</h3>
       <p className="muted">
-        Frontend only displays reminder state. Backend scheduler sends the emails.
+        Review which reminders have been sent and which ones are still pending.
       </p>
 
       <div className="reminder-timeline">
@@ -70,7 +70,7 @@ export default function ReminderTimeline({ policy }) {
               <h4>{item.label}</h4>
               <p className="muted">{item.helper}</p>
               <span>
-                {item.value ? formatDateTime(item.value) : "Pending / scheduled"}
+                {item.value ? formatDateTime(item.value) : "Pending"}
               </span>
             </div>
           </article>
@@ -83,8 +83,8 @@ export default function ReminderTimeline({ policy }) {
 
           <div>
             <h4>Release</h4>
-            <p className="muted">After inactivity days + grace days.</p>
-            <span>Backend-controlled</span>
+            <p className="muted">After the check-in deadline and reminder period.</p>
+            <span>Automatic when due</span>
           </div>
         </article>
       </div>

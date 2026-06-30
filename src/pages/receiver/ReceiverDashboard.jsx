@@ -52,8 +52,7 @@ export default function ReceiverDashboard() {
           <p className="eyebrow">Receiver Inbox</p>
           <h2>Your released capsules</h2>
           <p className="muted">
-            When an owner releases a capsule to your email, you can open its decrypted content,
-            download files, and acknowledge receipt.
+            When an owner releases a capsule to your email, you can view its content, download files, and confirm receipt.
           </p>
         </div>
 

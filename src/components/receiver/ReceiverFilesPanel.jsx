@@ -43,7 +43,7 @@ export default function ReceiverFilesPanel({ capsuleId }) {
       );
 
       downloadBlob(response.data, filename);
-      toast.success("Decrypted file downloaded.");
+      toast.success("File downloaded.");
     } catch (error) {
       toast.error(getApiErrorMessage(error, "File download failed."));
     } finally {
@@ -56,9 +56,9 @@ export default function ReceiverFilesPanel({ capsuleId }) {
       <div className="panel-heading-row">
         <div>
           <p className="eyebrow">Files</p>
-          <h3>Decrypted on download</h3>
+          <h3>Available files</h3>
           <p className="muted">
-            Files are stored encrypted by the owner and downloaded as decrypted originals.
+            Download the files that were shared with this capsule.
           </p>
         </div>
 

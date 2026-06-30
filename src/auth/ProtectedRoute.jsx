@@ -14,7 +14,7 @@ export function ProtectedRoute({ children, requiredRole }) {
       <main className="app-shell center-screen">
         <PageLoader
           title="Loading secure session..."
-          text="Checking your encrypted workspace access."
+          text="Checking your workspace access."
         />
       </main>
     );
