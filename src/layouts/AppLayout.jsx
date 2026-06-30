@@ -9,7 +9,6 @@ import {
   Menu,
   Shield,
   UserRoundPlus,
-  X,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -34,15 +33,17 @@ export default function AppLayout({ children }) {
         <div className="sidebar-top">
           <Link to="/app" className="brand sidebar-brand">
             <span className="brand-mark">L</span>
-            LegacyLock
+            <span>LegacyLock</span>
           </Link>
 
           <button
-            className="sidebar-close"
+            className="sidebar-logout-button"
             type="button"
-            onClick={() => setSidebarOpen(false)}
+            onClick={logout}
+            title="Logout"
+            aria-label="Logout"
           >
-            <X size={18} />
+            <LogOut size={17} />
           </button>
         </div>
 
@@ -63,17 +64,25 @@ export default function AppLayout({ children }) {
           {userIsOwner && (
             <>
               <div className="sidebar-label">Owner</div>
-              <NavItem to="/owner" icon={<Shield size={18} />} label="Dashboard" />
+
+              <NavItem
+                to="/owner"
+                icon={<Shield size={18} />}
+                label="Dashboard"
+              />
+
               <NavItem
                 to="/owner/capsules"
                 icon={<FileLock2 size={18} />}
                 label="Capsules"
               />
+
               <NavItem
                 to="/owner/receivers"
                 icon={<UserRoundPlus size={18} />}
                 label="Receivers"
               />
+
               <NavItem
                 to="/owner/check-ins"
                 icon={<CheckCircle2 size={18} />}
@@ -85,11 +94,13 @@ export default function AppLayout({ children }) {
           {userIsReceiver && (
             <>
               <div className="sidebar-label">Receiver</div>
+
               <NavItem
                 to="/receiver"
                 icon={<Inbox size={18} />}
                 label="Inbox"
               />
+
               <NavItem
                 to="/receiver/capsules"
                 icon={<Boxes size={18} />}
@@ -98,11 +109,6 @@ export default function AppLayout({ children }) {
             </>
           )}
         </nav>
-
-        <button className="logout-button" type="button" onClick={logout}>
-          <LogOut size={18} />
-          Logout
-        </button>
       </aside>
 
       {sidebarOpen && (
@@ -132,9 +138,10 @@ export default function AppLayout({ children }) {
                   ? "Receiver Inbox"
                   : "Workspace Overview"}
             </p>
+
             <h1>
               {isOwnerArea
-                ? "Manage your legacy vault"
+                ? "Manage your vault"
                 : isReceiverArea
                   ? "Released capsules"
                   : "Choose your workspace"}
@@ -143,9 +150,10 @@ export default function AppLayout({ children }) {
 
           <div className="topbar-actions">
             <ThemeToggle compact />
+
             <div className="topbar-status">
               <span className="status-dot" />
-              Secure
+              Protected
             </div>
           </div>
         </header>

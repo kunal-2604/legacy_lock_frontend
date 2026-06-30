@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown, Plus, RefreshCw, Trash2, UserRoundPlus } from "lucide-react";
+import { Plus, RefreshCw, Trash2, UserRoundPlus } from "lucide-react";
 import { toast } from "sonner";
 
 import ConfirmModal from "../ui/ConfirmModal.jsx";
@@ -8,6 +8,7 @@ import PageLoader from "../ui/PageLoader.jsx";
 import { capsuleApi } from "../../api/capsuleApi.js";
 import { receiverApi } from "../../api/receiverApi.js";
 import { getApiErrorMessage } from "../../utils/errorParser.js";
+import CustomSelect from "../ui/CustomSelect.jsx";
 
 function getReceiverId(receiver) {
   return (
@@ -24,7 +25,6 @@ export default function AssignReceiversPanel({ capsuleId }) {
   const [allReceivers, setAllReceivers] = useState([]);
   const [assignedReceivers, setAssignedReceivers] = useState([]);
   const [selectedReceiverId, setSelectedReceiverId] = useState("");
-  const [receiverMenuOpen, setReceiverMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [assigning, setAssigning] = useState(false);
   const [receiverToRemove, setReceiverToRemove] = useState(null);
@@ -66,9 +66,18 @@ export default function AssignReceiversPanel({ capsuleId }) {
     (receiver) => !assignedIds.has(String(getReceiverId(receiver)))
   );
 
-  const selectedReceiver = availableReceivers.find(
-    (receiver) => String(getReceiverId(receiver)) === String(selectedReceiverId)
-  );
+  const receiverOptions = availableReceivers
+    .map((receiver) => {
+      const receiverId = getReceiverId(receiver);
+
+      if (!receiverId) return null;
+
+      return {
+        value: String(receiverId),
+        label: `${receiver.name || "Unnamed Receiver"} — ${receiver.email}`,
+      };
+    })
+    .filter(Boolean);
 
   async function handleAssign(event) {
     event.preventDefault();
@@ -140,44 +149,13 @@ export default function AssignReceiversPanel({ capsuleId }) {
               </div>
             ) : (
               <>
-                <div className="receiver-select-wrap">
-                  <button
-                    className="receiver-select-button"
-                    type="button"
-                    onClick={() => setReceiverMenuOpen((open) => !open)}
-                  >
-                    <span>
-                      {selectedReceiver
-                        ? `${selectedReceiver.name || "Receiver"} — ${selectedReceiver.email}`
-                        : "Select receiver"}
-                    </span>
-                    <ChevronDown size={17} />
-                  </button>
-
-                  {receiverMenuOpen && (
-                    <div className="receiver-select-menu">
-                      {availableReceivers.map((receiver) => {
-                        const receiverId = getReceiverId(receiver);
-
-                        return (
-                          <button
-                            className="receiver-select-option"
-                            type="button"
-                            key={receiverId}
-                            onMouseDown={(event) => {
-                              event.preventDefault();
-                              setSelectedReceiverId(String(receiverId));
-                              setReceiverMenuOpen(false);
-                            }}
-                          >
-                            <strong>{receiver.name || "Unnamed Receiver"}</strong>
-                            <span>{receiver.email}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
+                <CustomSelect
+                  value={selectedReceiverId}
+                  onChange={setSelectedReceiverId}
+                  placeholder="Select receiver"
+                  options={receiverOptions}
+                  disabled={assigning}
+                />
 
                 <button className="glass-button primary" type="submit" disabled={assigning}>
                   <Plus size={16} />

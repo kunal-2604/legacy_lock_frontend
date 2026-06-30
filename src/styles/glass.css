@@ -1,11 +1,15 @@
 .glass-card {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   background: var(--bg-panel);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-glass);
   backdrop-filter: blur(18px);
+}
+
+.glass-card.clipped {
+  overflow: hidden;
 }
 
 .glass-card::after {
