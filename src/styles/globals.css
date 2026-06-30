@@ -2872,3 +2872,467 @@ body {
     min-height: 0;
   }
 }
+
+/* Final UX/HCI refinements */
+.app-shell {
+  background:
+    radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--primary) 24%, transparent), transparent 28%),
+    radial-gradient(circle at 86% 12%, color-mix(in srgb, var(--secondary) 18%, transparent), transparent 25%),
+    radial-gradient(circle at 72% 86%, rgba(124, 58, 237, 0.13), transparent 28%),
+    var(--app-bg-deep);
+}
+
+[data-theme="light"] .app-shell {
+  background:
+    radial-gradient(circle at 10% 14%, rgba(37, 99, 235, 0.13), transparent 28%),
+    radial-gradient(circle at 90% 8%, rgba(15, 118, 110, 0.12), transparent 24%),
+    radial-gradient(circle at 72% 86%, rgba(99, 102, 241, 0.1), transparent 28%),
+    linear-gradient(180deg, #f8fbff, #eaf3ff);
+}
+
+[data-theme="light"] .app-shell::before {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+}
+
+[data-theme="light"] .gradient-text {
+  background: linear-gradient(135deg, #0f172a, #2563eb, #0f766e);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 13px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-pill);
+  color: var(--text-main);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-glass);
+  font-size: 0.86rem;
+  font-weight: 800;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+  background: var(--bg-panel-strong);
+}
+
+.theme-toggle.compact {
+  width: 40px;
+  padding: 0;
+  flex: 0 0 auto;
+}
+
+.auth-brand-topline,
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar-actions {
+  justify-content: flex-end;
+}
+
+/* Better readable form fields */
+.glass-input {
+  min-height: 46px;
+  padding: 11px 14px;
+  color: var(--text-main);
+  background: var(--bg-input);
+  border-color: var(--border-soft);
+  line-height: 1.45;
+}
+
+input.glass-input,
+select.glass-input {
+  height: 46px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+textarea.glass-input,
+.glass-textarea {
+  padding: 14px 15px 16px;
+  line-height: 1.65;
+  vertical-align: top;
+}
+
+.form-field {
+  gap: 9px;
+}
+
+.form-field span {
+  color: var(--text-soft);
+}
+
+.glass-input::placeholder {
+  color: color-mix(in srgb, var(--text-muted) 78%, transparent);
+}
+
+/* Native selects and custom receiver dropdown */
+select.glass-input {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+    linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 13px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 38px;
+}
+
+.receiver-select-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+.receiver-select-button {
+  display: flex;
+  width: 100%;
+  min-height: 46px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  color: var(--text-main);
+  background: var(--bg-input);
+  font-weight: 750;
+  text-align: left;
+}
+
+.receiver-select-button span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.receiver-select-menu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  display: grid;
+  max-height: 260px;
+  overflow: auto;
+  padding: 8px;
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--app-bg-soft) 72%, var(--bg-panel-strong));
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(20px);
+}
+
+.receiver-select-option {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: 13px;
+  color: var(--text-main);
+  background: transparent;
+  text-align: left;
+}
+
+.receiver-select-option:hover,
+.receiver-select-option:focus-visible {
+  outline: none;
+  background: var(--accent-soft);
+}
+
+.receiver-select-option span {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+/* Check-in page: prevent history header and list from touching */
+.split-grid > section:not(.glass-card) {
+  display: grid;
+  gap: 16px;
+}
+
+.timeline-list {
+  margin-top: 0;
+  gap: 14px;
+}
+
+.timeline-item {
+  padding: 17px;
+}
+
+.timeline-item p {
+  margin: 0;
+  background: transparent;
+}
+
+/* Sidebar breathing room: keep logout away from last nav item */
+.app-sidebar {
+  gap: 16px;
+}
+
+.sidebar-nav {
+  gap: 7px;
+  padding-bottom: 12px;
+  overflow-y: auto;
+}
+
+.logout-button {
+  margin-top: 14px;
+  flex: 0 0 auto;
+}
+
+/* More cohesive contrast/color rules */
+.glass-card {
+  background: var(--bg-panel);
+  border-color: var(--border-soft);
+}
+
+.glass-card-hover:hover,
+.metric-card:hover,
+.security-card:hover,
+.receiver-card:hover,
+.file-row:hover,
+.assigned-row:hover {
+  border-color: color-mix(in srgb, var(--primary) 42%, var(--border-soft));
+  background: var(--bg-panel-strong);
+}
+
+.glass-button.secondary,
+.status-pill.success,
+.security-icon,
+.metric-icon,
+.quick-icon,
+.empty-icon,
+.auth-success-icon {
+  color: color-mix(in srgb, var(--secondary) 75%, var(--text-main));
+}
+
+[data-theme="light"] .glass-button.primary,
+[data-theme="light"] .brand-mark {
+  color: #ffffff;
+}
+
+[data-theme="light"] .topbar-status,
+[data-theme="light"] .hero-security-card {
+  color: #1e40af;
+  border-color: rgba(37, 99, 235, 0.18);
+  background: rgba(37, 99, 235, 0.08);
+}
+
+[data-theme="light"] .sidebar-link.active {
+  color: #1d4ed8;
+  background: rgba(37, 99, 235, 0.09);
+}
+
+[data-theme="light"] .sidebar-link:hover {
+  background: rgba(15, 23, 42, 0.045);
+}
+
+[data-theme="light"] .logout-button,
+[data-theme="light"] .icon-danger-button,
+[data-theme="light"] .glass-button.danger {
+  color: #be123c;
+  background: rgba(225, 29, 72, 0.08);
+  border-color: rgba(225, 29, 72, 0.18);
+}
+
+[data-theme="light"] .status-pill.success {
+  color: #047857;
+  background: rgba(5, 150, 105, 0.1);
+}
+
+[data-theme="light"] .status-pill.warning {
+  color: #92400e;
+  background: rgba(245, 158, 11, 0.12);
+}
+
+[data-theme="light"] .status-pill.info {
+  color: #1d4ed8;
+  background: rgba(37, 99, 235, 0.1);
+}
+
+[data-theme="light"] .status-pill.neutral {
+  color: #475569;
+  background: rgba(15, 23, 42, 0.045);
+}
+
+[data-theme="light"] .file-dropzone,
+[data-theme="light"] .receiver-content-box,
+[data-theme="light"] .mini-empty,
+[data-theme="light"] .capsule-meta,
+[data-theme="light"] .receiver-capsule-meta,
+[data-theme="light"] .policy-status-row,
+[data-theme="light"] .file-row,
+[data-theme="light"] .assigned-row,
+[data-theme="light"] .status-list-row,
+[data-theme="light"] .release-receiver-row,
+[data-theme="light"] .receiver-card,
+[data-theme="light"] .recent-receiver-row {
+  background: rgba(255, 255, 255, 0.62);
+}
+
+/* Mobile: remove unwanted top whitespace and tighten shell */
+@media (max-width: 1120px) {
+  .app-sidebar {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 720px) {
+  .dashboard-shell {
+    padding: 6px;
+  }
+
+  .topbar {
+    position: relative;
+    margin-bottom: 10px;
+  }
+
+  .dashboard-main {
+    padding-top: 0;
+  }
+
+  .dashboard-content {
+    gap: 12px;
+  }
+
+  .topbar-actions {
+    display: contents;
+  }
+
+  .topbar .theme-toggle {
+    width: 40px;
+    justify-self: end;
+  }
+
+  .auth-brand-topline {
+    justify-content: space-between;
+  }
+
+  .assign-form {
+    gap: 10px;
+  }
+
+  .receiver-select-menu {
+    position: static;
+    margin-top: 8px;
+  }
+}
+
+/* Final fixes requested after QA: stable sidebar, reliable custom select, no mobile top gap */
+.app-sidebar {
+  overflow: visible !important;
+  gap: 16px;
+}
+
+.sidebar-nav {
+  overflow: visible !important;
+  padding-bottom: 0 !important;
+  flex: 0 0 auto;
+}
+
+.logout-button {
+  margin-top: 22px !important;
+}
+
+.receiver-select-wrap {
+  position: relative;
+  isolation: isolate;
+  z-index: 20;
+}
+
+.receiver-select-button {
+  cursor: pointer;
+  user-select: none;
+}
+
+.receiver-select-menu {
+  z-index: 9999 !important;
+  pointer-events: auto;
+}
+
+.receiver-select-option {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.receiver-select-option * {
+  pointer-events: none;
+}
+
+.receiver-select-option:active {
+  transform: scale(0.995);
+}
+
+@media (max-width: 1120px) {
+  .dashboard-shell {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  .dashboard-main {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  .topbar {
+    margin-top: 0 !important;
+  }
+
+  .app-sidebar {
+    overflow: visible !important;
+  }
+
+  .sidebar-nav {
+    overflow: visible !important;
+  }
+}
+
+@media (max-width: 720px) {
+  html,
+  body,
+  #root {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .dashboard-shell {
+    padding: 0 6px 6px !important;
+  }
+
+  .topbar {
+    margin-top: 0 !important;
+    border-radius: 18px;
+  }
+
+  .receiver-select-menu {
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  .assign-form {
+    overflow: visible;
+  }
+
+  .assignment-panel {
+    overflow: visible;
+  }
+}

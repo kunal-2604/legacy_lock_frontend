@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { LockKeyhole, ShieldCheck, UsersRound } from "lucide-react";
+import ThemeToggle from "../../components/ui/ThemeToggle.jsx";
 
 export default function Landing() {
   return (
@@ -12,6 +13,7 @@ export default function Landing() {
           </Link>
 
           <div className="nav-actions">
+            <ThemeToggle compact />
             <Link to="/login" className="glass-button ghost">
               Login
             </Link>

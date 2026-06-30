@@ -15,6 +15,7 @@ import { useState } from "react";
 
 import { useAuth } from "../auth/AuthProvider.jsx";
 import { isOwner, isReceiver } from "../auth/roleUtils.js";
+import ThemeToggle from "../components/ui/ThemeToggle.jsx";
 
 export default function AppLayout({ children }) {
   const { user, logout } = useAuth();
@@ -140,9 +141,12 @@ export default function AppLayout({ children }) {
             </h1>
           </div>
 
-          <div className="topbar-status">
-            <span className="status-dot" />
-            Secure session
+          <div className="topbar-actions">
+            <ThemeToggle compact />
+            <div className="topbar-status">
+              <span className="status-dot" />
+              Secure
+            </div>
           </div>
         </header>
 

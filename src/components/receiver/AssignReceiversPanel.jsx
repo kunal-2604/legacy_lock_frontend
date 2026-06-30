@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, RefreshCw, Trash2, UserRoundPlus } from "lucide-react";
+import { ChevronDown, Plus, RefreshCw, Trash2, UserRoundPlus } from "lucide-react";
 import { toast } from "sonner";
 
 import ConfirmModal from "../ui/ConfirmModal.jsx";
@@ -9,10 +9,22 @@ import { capsuleApi } from "../../api/capsuleApi.js";
 import { receiverApi } from "../../api/receiverApi.js";
 import { getApiErrorMessage } from "../../utils/errorParser.js";
 
+function getReceiverId(receiver) {
+  return (
+    receiver?.id ||
+    receiver?.receiverId ||
+    receiver?.receiverContactId ||
+    receiver?.contactId ||
+    receiver?.uuid ||
+    ""
+  );
+}
+
 export default function AssignReceiversPanel({ capsuleId }) {
   const [allReceivers, setAllReceivers] = useState([]);
   const [assignedReceivers, setAssignedReceivers] = useState([]);
   const [selectedReceiverId, setSelectedReceiverId] = useState("");
+  const [receiverMenuOpen, setReceiverMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [assigning, setAssigning] = useState(false);
   const [receiverToRemove, setReceiverToRemove] = useState(null);
@@ -45,13 +57,17 @@ export default function AssignReceiversPanel({ capsuleId }) {
   const assignedIds = useMemo(() => {
     return new Set(
       assignedReceivers.map((receiver) =>
-        String(receiver.id || receiver.receiverId)
+        String(getReceiverId(receiver))
       )
     );
   }, [assignedReceivers]);
 
   const availableReceivers = allReceivers.filter(
-    (receiver) => !assignedIds.has(String(receiver.id || receiver.receiverId))
+    (receiver) => !assignedIds.has(String(getReceiverId(receiver)))
+  );
+
+  const selectedReceiver = availableReceivers.find(
+    (receiver) => String(getReceiverId(receiver)) === String(selectedReceiverId)
   );
 
   async function handleAssign(event) {
@@ -79,7 +95,7 @@ export default function AssignReceiversPanel({ capsuleId }) {
   async function handleRemoveConfirmed() {
     if (!receiverToRemove) return;
 
-    const receiverId = receiverToRemove.id || receiverToRemove.receiverId;
+    const receiverId = getReceiverId(receiverToRemove);
     setRemoving(true);
 
     try {
@@ -124,22 +140,44 @@ export default function AssignReceiversPanel({ capsuleId }) {
               </div>
             ) : (
               <>
-                <select
-                  className="glass-input"
-                  value={selectedReceiverId}
-                  onChange={(e) => setSelectedReceiverId(e.target.value)}
-                >
-                  <option value="">Select receiver</option>
-                  {availableReceivers.map((receiver) => {
-                    const receiverId = receiver.id || receiver.receiverId;
+                <div className="receiver-select-wrap">
+                  <button
+                    className="receiver-select-button"
+                    type="button"
+                    onClick={() => setReceiverMenuOpen((open) => !open)}
+                  >
+                    <span>
+                      {selectedReceiver
+                        ? `${selectedReceiver.name || "Receiver"} — ${selectedReceiver.email}`
+                        : "Select receiver"}
+                    </span>
+                    <ChevronDown size={17} />
+                  </button>
 
-                    return (
-                      <option key={receiverId} value={receiverId}>
-                        {receiver.name} — {receiver.email}
-                      </option>
-                    );
-                  })}
-                </select>
+                  {receiverMenuOpen && (
+                    <div className="receiver-select-menu">
+                      {availableReceivers.map((receiver) => {
+                        const receiverId = getReceiverId(receiver);
+
+                        return (
+                          <button
+                            className="receiver-select-option"
+                            type="button"
+                            key={receiverId}
+                            onMouseDown={(event) => {
+                              event.preventDefault();
+                              setSelectedReceiverId(String(receiverId));
+                              setReceiverMenuOpen(false);
+                            }}
+                          >
+                            <strong>{receiver.name || "Unnamed Receiver"}</strong>
+                            <span>{receiver.email}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
 
                 <button className="glass-button primary" type="submit" disabled={assigning}>
                   <Plus size={16} />
@@ -158,7 +196,7 @@ export default function AssignReceiversPanel({ capsuleId }) {
           ) : (
             <div className="assigned-list">
               {assignedReceivers.map((receiver) => {
-                const receiverId = receiver.id || receiver.receiverId;
+                const receiverId = getReceiverId(receiver);
 
                 return (
                   <article className="assigned-row" key={receiverId}>

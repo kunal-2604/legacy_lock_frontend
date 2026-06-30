@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ShieldCheck } from "lucide-react";
+import ThemeToggle from "../components/ui/ThemeToggle.jsx";
 
 export default function AuthLayout({
   eyebrow,
@@ -12,10 +13,13 @@ export default function AuthLayout({
     <main className="app-shell auth-page">
       <div className="auth-shell">
         <section className="auth-brand-panel glass-card">
-          <Link to="/" className="brand">
-            <span className="brand-mark">L</span>
-            LegacyLock
-          </Link>
+          <div className="auth-brand-topline">
+            <Link to="/" className="brand">
+              <span className="brand-mark">L</span>
+              LegacyLock
+            </Link>
+            <ThemeToggle compact />
+          </div>
 
           <div className="auth-brand-content">
             <div className="secure-orb auth-orb">

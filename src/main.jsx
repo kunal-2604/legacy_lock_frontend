@@ -12,6 +12,11 @@ import "./styles/globals.css";
 import "./styles/glass.css";
 import "./styles/animations.css";
 
+const savedTheme = localStorage.getItem("legacylock-theme");
+const preferredTheme = window.matchMedia?.("(prefers-color-scheme: light)").matches ? "light" : "dark";
+document.documentElement.dataset.theme = savedTheme || preferredTheme;
+
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
