@@ -3688,3 +3688,15 @@ select.glass-input {
   text-align: center;
 }
 
+.image-brand-mark {
+  overflow: hidden;
+  padding: 0;
+  background: rgba(96, 165, 250, 0.12);
+}
+
+.image-brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

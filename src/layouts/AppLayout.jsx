@@ -32,7 +32,9 @@ export default function AppLayout({ children }) {
       <aside className={`app-sidebar glass-card ${sidebarOpen ? "open" : ""}`}>
         <div className="sidebar-top">
           <Link to="/app" className="brand sidebar-brand">
-            <span className="brand-mark">L</span>
+            <span className="brand-mark image-brand-mark">
+              <img src="/logo.png" alt="LegacyLock" />
+            </span>
             <span>LegacyLock</span>
           </Link>
 

@@ -15,7 +15,9 @@ export default function AuthLayout({
         <section className="auth-brand-panel glass-card">
           <div className="auth-brand-topline">
             <Link to="/" className="brand">
-              <span className="brand-mark">L</span>
+              <span className="brand-mark image-brand-mark">
+                <img src="/logo.png" alt="LegacyLock" />
+              </span>
               LegacyLock
             </Link>
             <ThemeToggle compact />

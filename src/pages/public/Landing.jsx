@@ -8,7 +8,9 @@ export default function Landing() {
       <div className="page-container landing-page">
         <nav className="landing-nav">
           <Link to="/" className="brand">
-            <span className="brand-mark">L</span>
+            <span className="brand-mark image-brand-mark">
+              <img src="/logo.png" alt="LegacyLock" />
+            </span>
             LegacyLock
           </Link>
 
