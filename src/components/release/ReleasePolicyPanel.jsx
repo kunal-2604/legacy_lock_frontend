@@ -50,7 +50,7 @@ export default function ReleasePolicyPanel({ capsuleId, onPolicyChange }) {
   async function handleSave(event) {
     event.preventDefault();
 
-    if (form.inactivityDays < 1) {
+    if (form.inactivityDays < 0) {
       toast.error("Inactivity days must be at least 1.");
       return;
     }
@@ -139,7 +139,7 @@ export default function ReleasePolicyPanel({ capsuleId, onPolicyChange }) {
               <input
                 className="glass-input"
                 type="number"
-                min="1"
+                min="0"
                 value={form.inactivityDays}
                 onChange={(e) => updateField("inactivityDays", e.target.value)}
               />

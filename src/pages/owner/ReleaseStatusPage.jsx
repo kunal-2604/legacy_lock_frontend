@@ -1,6 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, RefreshCw, ShieldCheck } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Clock,
+  MessageSquareText,
+  RefreshCw,
+  ShieldCheck,
+  UserRound,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import AppLayout from "../../layouts/AppLayout.jsx";
@@ -33,28 +41,34 @@ export default function ReleaseStatusPage() {
     loadStatus();
   }, [capsuleId]);
 
-  const assignedReceivers =
-    status?.assignedReceivers ||
-    status?.receivers ||
-    status?.receiverStatuses ||
-    [];
+  const receivers = useMemo(() => {
+    return Array.isArray(status?.receivers) ? status.receivers : [];
+  }, [status]);
 
-  const grants = status?.accessGrants || status?.grants || [];
-  const acknowledgements = status?.acknowledgements || [];
+  const accessGrantedReceivers = useMemo(() => {
+    return receivers.filter((receiver) => receiver.accessGranted);
+  }, [receivers]);
+
+  const acknowledgedReceivers = useMemo(() => {
+    return receivers.filter((receiver) => receiver.acknowledged);
+  }, [receivers]);
 
   return (
     <AppLayout>
       <section className="page-heading-row">
         <div>
           <p className="eyebrow">Release Status</p>
-          <h2>Capsule release progress</h2>
+          <h2>{status?.capsuleTitle || "Capsule release progress"}</h2>
           <p className="muted">
-            Track receiver assignments, access grants, and acknowledgements.
+            Track receiver assignments, access grants, and receiver acknowledgements.
           </p>
         </div>
 
         <div className="card-actions">
-          <button className="glass-button ghost" onClick={() => navigate(`/owner/capsules/${capsuleId}`)}>
+          <button
+            className="glass-button ghost"
+            onClick={() => navigate(`/owner/capsules/${capsuleId}`)}
+          >
             <ArrowLeft size={17} />
             Capsule
           </button>
@@ -69,6 +83,7 @@ export default function ReleaseStatusPage() {
       {loading ? (
         <section className="empty-dashboard glass-card">
           <h3>Loading release status...</h3>
+          <p className="muted">Checking latest receiver release data.</p>
         </section>
       ) : !status ? (
         <section className="empty-dashboard glass-card">
@@ -80,61 +95,150 @@ export default function ReleaseStatusPage() {
       ) : (
         <>
           <section className="metric-grid receiver-metrics">
-            <MetricCard label="Assigned Receivers" value={assignedReceivers.length} />
-            <MetricCard label="Access Grants" value={grants.length} />
-            <MetricCard label="Acknowledgements" value={acknowledgements.length} />
+            <MetricCard
+              icon={<UserRound />}
+              label="Assigned Receivers"
+              value={status.totalAssignedReceivers ?? receivers.length}
+              helper="Receivers attached to capsule"
+            />
+
+            <MetricCard
+              icon={<ShieldCheck />}
+              label="Access Grants"
+              value={status.totalAccessGrants ?? accessGrantedReceivers.length}
+              helper="Receivers with released access"
+            />
+
+            <MetricCard
+              icon={<CheckCircle2 />}
+              label="Acknowledged"
+              value={status.totalAcknowledged ?? acknowledgedReceivers.length}
+              helper="Receivers who confirmed receipt"
+            />
           </section>
 
-          <section className="release-status-grid">
-            <StatusList
-              title="Assigned Receivers"
-              empty="No assigned receivers."
-              items={assignedReceivers}
-              renderItem={(item) => (
-                <>
-                  <div>
-                    <h4>{item.name || item.receiverName || item.email}</h4>
-                    <p className="muted">{item.email || item.receiverEmail}</p>
-                  </div>
-                  {item.status && <StatusPill status={item.status} />}
-                </>
-              )}
-            />
+          <section className="release-status-grid-fixed">
+            <section className="glass-card status-list-panel wide">
+              <div className="panel-heading-row">
+                <div>
+                  <p className="eyebrow">Receiver Progress</p>
+                  <h3>All assigned receivers</h3>
+                </div>
 
-            <StatusList
-              title="Access Grants"
-              empty="No access grants created yet."
-              items={grants}
-              renderItem={(item) => (
-                <>
-                  <div>
-                    <h4>{item.receiverEmail || item.email || "Receiver grant"}</h4>
-                    <p className="muted">
-                      Granted {formatDateTime(item.grantedAt || item.createdAt)}
-                    </p>
-                  </div>
-                  {item.status && <StatusPill status={item.status} />}
-                </>
-              )}
-            />
+                {status.capsuleStatus && <StatusPill status={status.capsuleStatus} />}
+              </div>
 
-            <StatusList
-              title="Acknowledgements"
-              empty="No acknowledgements yet."
-              items={acknowledgements}
-              renderItem={(item) => (
-                <>
-                  <div>
-                    <h4>{item.receiverEmail || item.email || "Acknowledgement"}</h4>
-                    <p className="muted">
-                      {item.message || "No message."} ·{" "}
-                      {formatDateTime(item.createdAt || item.acknowledgedAt)}
-                    </p>
-                  </div>
-                  <ShieldCheck size={18} />
-                </>
+              {receivers.length === 0 ? (
+                <p className="muted">No receivers assigned to this capsule.</p>
+              ) : (
+                <div className="status-list">
+                  {receivers.map((receiver) => (
+                    <article
+                      className="release-receiver-row"
+                      key={receiver.receiverId}
+                    >
+                      <div className="receiver-avatar">
+                        {(receiver.receiverName || receiver.receiverEmail || "R")
+                          .charAt(0)
+                          .toUpperCase()}
+                      </div>
+
+                      <div className="release-receiver-main">
+                        <h4>{receiver.receiverName || "Unnamed Receiver"}</h4>
+                        <p className="muted">{receiver.receiverEmail}</p>
+
+                        <div className="release-mini-meta">
+                          <span>
+                            Assigned: {formatDateTime(receiver.assignedAt)}
+                          </span>
+
+                          {receiver.accessGranted && (
+                            <span>
+                              Granted: {formatDateTime(receiver.grantedAt)}
+                            </span>
+                          )}
+
+                          {receiver.acknowledged && (
+                            <span>
+                              Acknowledged:{" "}
+                              {formatDateTime(receiver.acknowledgedAt)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="release-status-stack">
+                        <StatusPill status={receiver.receiverStatus || "ACTIVE"} />
+
+                        {receiver.accessGranted ? (
+                          <span className="status-pill info">
+                            Access Granted
+                          </span>
+                        ) : (
+                          <span className="status-pill neutral">
+                            Not Granted
+                          </span>
+                        )}
+
+                        {receiver.acknowledged ? (
+                          <span className="status-pill success">
+                            Acknowledged
+                          </span>
+                        ) : (
+                          <span className="status-pill warning">
+                            Pending Ack
+                          </span>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
               )}
-            />
+            </section>
+
+            <section className="glass-card status-list-panel">
+              <div className="panel-heading-row">
+                <div>
+                  <p className="eyebrow">Acknowledgements</p>
+                  <h3>Receiver receipts</h3>
+                </div>
+              </div>
+
+              {acknowledgedReceivers.length === 0 ? (
+                <div className="mini-empty">
+                  <Clock size={28} />
+                  <h4>No acknowledgements yet</h4>
+                  <p className="muted">
+                    After a receiver submits acknowledgement, it will appear here.
+                  </p>
+                </div>
+              ) : (
+                <div className="ack-list">
+                  {acknowledgedReceivers.map((receiver) => (
+                    <article className="ack-row" key={receiver.acknowledgementId}>
+                      <div className="auth-success-icon small">
+                        <MessageSquareText size={22} />
+                      </div>
+
+                      <div>
+                        <h4>{receiver.receiverName || receiver.receiverEmail}</h4>
+                        <p className="muted">
+                          {formatDateTime(receiver.acknowledgedAt)}
+                        </p>
+
+                        {receiver.acknowledgementMessage ? (
+                          <blockquote>
+                            {receiver.acknowledgementMessage}
+                          </blockquote>
+                        ) : (
+                          <p className="muted">No message added.</p>
+                        )}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
           </section>
         </>
       )}
@@ -142,32 +246,13 @@ export default function ReleaseStatusPage() {
   );
 }
 
-function MetricCard({ label, value }) {
+function MetricCard({ icon, label, value, helper }) {
   return (
     <article className="metric-card glass-card">
+      <div className="metric-icon">{icon}</div>
       <span>{label}</span>
       <strong>{value}</strong>
-      <p className="muted">Backend release data</p>
+      <p className="muted">{helper}</p>
     </article>
-  );
-}
-
-function StatusList({ title, empty, items, renderItem }) {
-  return (
-    <section className="glass-card status-list-panel">
-      <h3>{title}</h3>
-
-      {items.length === 0 ? (
-        <p className="muted">{empty}</p>
-      ) : (
-        <div className="status-list">
-          {items.map((item, index) => (
-            <article className="status-list-row" key={item.id || item.grantId || index}>
-              {renderItem(item)}
-            </article>
-          ))}
-        </div>
-      )}
-    </section>
   );
 }

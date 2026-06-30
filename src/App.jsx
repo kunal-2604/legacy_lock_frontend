@@ -23,6 +23,9 @@ import ReceiversPage from "./pages/owner/ReceiversPage.jsx";
 import CheckInsPage from "./pages/owner/CheckInsPage.jsx";
 import ReleaseStatusPage from "./pages/owner/ReleaseStatusPage.jsx";
 
+import ReleasedCapsulesPage from "./pages/receiver/ReleasedCapsulesPage.jsx";
+import ReceiverCapsuleDetailPage from "./pages/receiver/ReceiverCapsuleDetailPage.jsx";
+
 export default function App() {
   return (
     <Routes>
@@ -141,6 +144,24 @@ export default function App() {
               title="Released capsules coming next"
               text="Milestone 6 will add released capsule list and detail pages."
             />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/receiver/capsules"
+        element={
+          <ProtectedRoute requiredRole="RECEIVER">
+            <ReleasedCapsulesPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/receiver/capsules/:capsuleId"
+        element={
+          <ProtectedRoute requiredRole="RECEIVER">
+            <ReceiverCapsuleDetailPage />
           </ProtectedRoute>
         }
       />
