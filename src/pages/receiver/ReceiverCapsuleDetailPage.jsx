@@ -5,6 +5,8 @@ import { toast } from "sonner";
 
 import AppLayout from "../../layouts/AppLayout.jsx";
 import StatusPill from "../../components/ui/StatusPill.jsx";
+import PageLoader from "../../components/ui/PageLoader.jsx";
+import EmptyState from "../../components/ui/EmptyState.jsx";
 import ReceiverFilesPanel from "../../components/receiver/ReceiverFilesPanel.jsx";
 import AcknowledgementPanel from "../../components/receiver/AcknowledgementPanel.jsx";
 import { receiverCapsuleApi } from "../../api/receiverCapsuleApi.js";
@@ -65,20 +67,17 @@ export default function ReceiverCapsuleDetailPage() {
       </section>
 
       {loading ? (
-        <section className="empty-dashboard glass-card">
-          <h3>Loading released capsule...</h3>
-          <p className="muted">Fetching decrypted receiver access.</p>
-        </section>
+        <PageLoader title="Loading released capsule..." text="Fetching decrypted receiver access." />
       ) : !capsule ? (
-        <section className="empty-dashboard glass-card">
-          <h3>Capsule unavailable</h3>
-          <p className="muted">
-            This capsule may not be released to your email or access may have changed.
-          </p>
-          <Link to="/receiver/capsules" className="glass-button primary">
-            Back to inbox
-          </Link>
-        </section>
+        <EmptyState
+          title="Capsule unavailable"
+          text="This capsule may not be released to your email or access may have changed."
+          action={
+            <Link to="/receiver/capsules" className="glass-button primary">
+              Back to inbox
+            </Link>
+          }
+        />
       ) : (
         <>
           <section className="receiver-detail-summary">

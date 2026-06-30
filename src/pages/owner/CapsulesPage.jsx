@@ -5,6 +5,9 @@ import { toast } from "sonner";
 
 import AppLayout from "../../layouts/AppLayout.jsx";
 import StatusPill from "../../components/ui/StatusPill.jsx";
+import ConfirmModal from "../../components/ui/ConfirmModal.jsx";
+import EmptyState from "../../components/ui/EmptyState.jsx";
+import { GridSkeleton } from "../../components/ui/Skeleton.jsx";
 import { capsuleApi } from "../../api/capsuleApi.js";
 import { getApiErrorMessage } from "../../utils/errorParser.js";
 import { formatDate } from "../../utils/dateUtils.js";
@@ -13,6 +16,8 @@ export default function CapsulesPage() {
   const [capsules, setCapsules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
+  const [capsuleToDelete, setCapsuleToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   async function loadCapsules() {
     setLoading(true);
@@ -53,17 +58,21 @@ export default function CapsulesPage() {
     }
   }
 
-  async function handleDelete(capsuleId) {
-    const confirmed = window.confirm("Delete this capsule? This action cannot be undone.");
+  async function handleDeleteConfirmed() {
+    if (!capsuleToDelete) return;
 
-    if (!confirmed) return;
+    const capsuleId = capsuleToDelete.id || capsuleToDelete.capsuleId;
+    setDeleting(true);
 
     try {
       await capsuleApi.remove(capsuleId);
       toast.success("Capsule deleted.");
+      setCapsuleToDelete(null);
       loadCapsules();
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Failed to delete capsule."));
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -94,81 +103,90 @@ export default function CapsulesPage() {
           />
         </div>
 
-        <button className="glass-button ghost" onClick={loadCapsules}>
+        <button className="glass-button ghost" type="button" onClick={loadCapsules}>
           <RefreshCw size={16} />
           Refresh
         </button>
       </section>
 
       {loading ? (
-        <section className="empty-dashboard glass-card">
-          <h3>Loading capsules...</h3>
-          <p className="muted">Fetching your secure capsule list.</p>
-        </section>
+        <GridSkeleton count={6} />
       ) : filteredCapsules.length === 0 ? (
-        <section className="empty-dashboard glass-card">
-          <div className="empty-icon">
-            <FileLock2 size={34} />
-          </div>
-          <h3>No capsules found</h3>
-          <p className="muted">
-            Create your first capsule to store encrypted legacy content.
-          </p>
-          <Link to="/owner/capsules/new" className="glass-button primary">
-            Create Capsule
-          </Link>
-        </section>
+        <EmptyState
+          icon={<FileLock2 size={34} />}
+          eyebrow="Capsules"
+          title="No capsules found"
+          text="Create your first capsule to store encrypted legacy content."
+          action={
+            <Link to="/owner/capsules/new" className="glass-button primary">
+              Create Capsule
+            </Link>
+          }
+        />
       ) : (
         <section className="capsule-grid">
-          {filteredCapsules.map((capsule) => (
-            <article className="capsule-card glass-card glass-card-hover" key={capsule.id || capsule.capsuleId}>
-              <div className="capsule-card-top">
-                <div className="capsule-icon">
-                  <FileLock2 size={22} />
+          {filteredCapsules.map((capsule) => {
+            const capsuleId = capsule.id || capsule.capsuleId;
+
+            return (
+              <article className="capsule-card glass-card glass-card-hover" key={capsuleId}>
+                <div className="capsule-card-top">
+                  <div className="capsule-icon">
+                    <FileLock2 size={22} />
+                  </div>
+                  <StatusPill status={capsule.status || "DRAFT"} />
                 </div>
-                <StatusPill status={capsule.status || "DRAFT"} />
-              </div>
 
-              <h3>{capsule.title || "Untitled Capsule"}</h3>
-              <p className="muted">
-                {capsule.description || "No description added yet."}
-              </p>
+                <h3>{capsule.title || "Untitled Capsule"}</h3>
+                <p className="muted">
+                  {capsule.description || "No description added yet."}
+                </p>
 
-              <div className="capsule-meta">
-                <span>Created</span>
-                <strong>{formatDate(capsule.createdAt)}</strong>
-              </div>
+                <div className="capsule-meta">
+                  <span>Created</span>
+                  <strong>{formatDate(capsule.createdAt)}</strong>
+                </div>
 
-              <div className="card-actions">
-                <Link
-                  className="glass-button ghost"
-                  to={`/owner/capsules/${capsule.id || capsule.capsuleId}`}
-                >
-                  Open
-                </Link>
+                <div className="card-actions">
+                  <Link className="glass-button ghost" to={`/owner/capsules/${capsuleId}`}>
+                    Open
+                  </Link>
 
-                {String(capsule.status).toUpperCase() === "DRAFT" && (
+                  {String(capsule.status).toUpperCase() === "DRAFT" && (
+                    <button
+                      className="glass-button secondary"
+                      type="button"
+                      onClick={() => handleActivate(capsuleId)}
+                    >
+                      <Zap size={15} />
+                      Activate
+                    </button>
+                  )}
+
                   <button
-                    className="glass-button secondary"
-                    onClick={() => handleActivate(capsule.id || capsule.capsuleId)}
+                    className="icon-danger-button"
+                    type="button"
+                    onClick={() => setCapsuleToDelete(capsule)}
+                    title="Delete capsule"
                   >
-                    <Zap size={15} />
-                    Activate
+                    <Trash2 size={16} />
                   </button>
-                )}
-
-                <button
-                  className="icon-danger-button"
-                  onClick={() => handleDelete(capsule.id || capsule.capsuleId)}
-                  title="Delete capsule"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            </article>
-          ))}
+                </div>
+              </article>
+            );
+          })}
         </section>
       )}
+
+      <ConfirmModal
+        open={Boolean(capsuleToDelete)}
+        title="Delete capsule?"
+        text={`This will delete ${capsuleToDelete?.title || "this capsule"}. This action cannot be undone.`}
+        confirmText="Delete Capsule"
+        loading={deleting}
+        onClose={() => setCapsuleToDelete(null)}
+        onConfirm={handleDeleteConfirmed}
+      />
     </AppLayout>
   );
 }

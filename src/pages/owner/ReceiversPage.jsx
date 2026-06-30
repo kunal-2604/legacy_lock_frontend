@@ -5,6 +5,9 @@ import { toast } from "sonner";
 import AppLayout from "../../layouts/AppLayout.jsx";
 import FormField from "../../components/ui/FormField.jsx";
 import SubmitButton from "../../components/ui/SubmitButton.jsx";
+import ConfirmModal from "../../components/ui/ConfirmModal.jsx";
+import EmptyState from "../../components/ui/EmptyState.jsx";
+import PageLoader from "../../components/ui/PageLoader.jsx";
 import { receiverApi } from "../../api/receiverApi.js";
 import { getApiErrorMessage } from "../../utils/errorParser.js";
 
@@ -13,6 +16,8 @@ export default function ReceiversPage() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [receiverToDelete, setReceiverToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -52,28 +57,41 @@ export default function ReceiversPage() {
     setSaving(true);
 
     try {
-      await receiverApi.create(form);
+      await receiverApi.create({
+        ...form,
+        email: form.email.trim().toLowerCase(),
+      });
       toast.success("Receiver added.");
       setForm({ name: "", email: "", phone: "" });
       loadReceivers();
     } catch (error) {
-      toast.error(getApiErrorMessage(error, "Failed to add receiver."));
+      const message = getApiErrorMessage(error, "Failed to add receiver.");
+
+      if (message.toLowerCase().includes("already exists")) {
+        toast.warning("This receiver is already active.");
+      } else {
+        toast.error(message);
+      }
     } finally {
       setSaving(false);
     }
   }
 
-  async function handleDelete(receiverId) {
-    const confirmed = window.confirm("Remove this receiver contact?");
+  async function handleDeleteConfirmed() {
+    if (!receiverToDelete) return;
 
-    if (!confirmed) return;
+    const receiverId = receiverToDelete.id || receiverToDelete.receiverId;
+    setDeleting(true);
 
     try {
       await receiverApi.remove(receiverId);
       toast.success("Receiver removed.");
+      setReceiverToDelete(null);
       loadReceivers();
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Failed to remove receiver."));
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -149,24 +167,21 @@ export default function ReceiversPage() {
               />
             </div>
 
-            <button className="glass-button ghost" onClick={loadReceivers}>
+            <button className="glass-button ghost" type="button" onClick={loadReceivers}>
               <RefreshCw size={16} />
               Refresh
             </button>
           </div>
 
           {loading ? (
-            <section className="empty-dashboard glass-card">
-              <h3>Loading receivers...</h3>
-            </section>
+            <PageLoader title="Loading receivers..." text="Fetching trusted contacts." />
           ) : filteredReceivers.length === 0 ? (
-            <section className="empty-dashboard glass-card">
-              <div className="empty-icon">
-                <UserRoundPlus size={34} />
-              </div>
-              <h3>No receivers found</h3>
-              <p className="muted">Add your first trusted receiver contact.</p>
-            </section>
+            <EmptyState
+              icon={<UserRoundPlus size={34} />}
+              eyebrow="Receivers"
+              title="No receivers found"
+              text="Add your first trusted receiver contact."
+            />
           ) : (
             <div className="receiver-list">
               {filteredReceivers.map((receiver) => (
@@ -191,7 +206,8 @@ export default function ReceiversPage() {
 
                   <button
                     className="icon-danger-button"
-                    onClick={() => handleDelete(receiver.id || receiver.receiverId)}
+                    type="button"
+                    onClick={() => setReceiverToDelete(receiver)}
                   >
                     <Trash2 size={16} />
                   </button>
@@ -201,6 +217,18 @@ export default function ReceiversPage() {
           )}
         </section>
       </section>
+
+      <ConfirmModal
+        open={Boolean(receiverToDelete)}
+        title="Remove receiver?"
+        text={`This will remove ${
+          receiverToDelete?.name || receiverToDelete?.email || "this receiver"
+        } from your active receiver list.`}
+        confirmText="Remove Receiver"
+        loading={deleting}
+        onClose={() => setReceiverToDelete(null)}
+        onConfirm={handleDeleteConfirmed}
+      />
     </AppLayout>
   );
 }

@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Plus, RefreshCw, Trash2, UserRoundPlus } from "lucide-react";
 import { toast } from "sonner";
 
+import ConfirmModal from "../ui/ConfirmModal.jsx";
+import PageLoader from "../ui/PageLoader.jsx";
 import { capsuleApi } from "../../api/capsuleApi.js";
 import { receiverApi } from "../../api/receiverApi.js";
 import { getApiErrorMessage } from "../../utils/errorParser.js";
@@ -13,6 +15,8 @@ export default function AssignReceiversPanel({ capsuleId }) {
   const [selectedReceiverId, setSelectedReceiverId] = useState("");
   const [loading, setLoading] = useState(true);
   const [assigning, setAssigning] = useState(false);
+  const [receiverToRemove, setReceiverToRemove] = useState(null);
+  const [removing, setRemoving] = useState(false);
 
   async function loadData() {
     setLoading(true);
@@ -72,17 +76,21 @@ export default function AssignReceiversPanel({ capsuleId }) {
     }
   }
 
-  async function handleRemove(receiverId) {
-    const confirmed = window.confirm("Remove this receiver from capsule?");
+  async function handleRemoveConfirmed() {
+    if (!receiverToRemove) return;
 
-    if (!confirmed) return;
+    const receiverId = receiverToRemove.id || receiverToRemove.receiverId;
+    setRemoving(true);
 
     try {
       await capsuleApi.removeAssignedReceiver(capsuleId, receiverId);
       toast.success("Receiver removed from capsule.");
+      setReceiverToRemove(null);
       loadData();
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Failed to remove assignment."));
+    } finally {
+      setRemoving(false);
     }
   }
 
@@ -101,7 +109,7 @@ export default function AssignReceiversPanel({ capsuleId }) {
       </div>
 
       {loading ? (
-        <p className="muted">Loading receiver data...</p>
+        <PageLoader title="Loading receiver data..." text="Checking receiver assignments." />
       ) : (
         <>
           <form className="assign-form" onSubmit={handleAssign}>
@@ -133,7 +141,7 @@ export default function AssignReceiversPanel({ capsuleId }) {
                   })}
                 </select>
 
-                <button className="glass-button primary" disabled={assigning}>
+                <button className="glass-button primary" type="submit" disabled={assigning}>
                   <Plus size={16} />
                   {assigning ? "Assigning..." : "Assign"}
                 </button>
@@ -166,7 +174,7 @@ export default function AssignReceiversPanel({ capsuleId }) {
                     <button
                       className="icon-danger-button"
                       type="button"
-                      onClick={() => handleRemove(receiverId)}
+                      onClick={() => setReceiverToRemove(receiver)}
                     >
                       <Trash2 size={16} />
                     </button>
@@ -177,6 +185,18 @@ export default function AssignReceiversPanel({ capsuleId }) {
           )}
         </>
       )}
+
+      <ConfirmModal
+        open={Boolean(receiverToRemove)}
+        title="Remove receiver from capsule?"
+        text={`This removes ${
+          receiverToRemove?.name || receiverToRemove?.email || "this receiver"
+        } from this capsule assignment.`}
+        confirmText="Remove Assignment"
+        loading={removing}
+        onClose={() => setReceiverToRemove(null)}
+        onConfirm={handleRemoveConfirmed}
+      />
     </section>
   );
 }

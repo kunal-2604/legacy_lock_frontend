@@ -4,6 +4,8 @@ import { toast } from "sonner";
 
 import AppLayout from "../../layouts/AppLayout.jsx";
 import SubmitButton from "../../components/ui/SubmitButton.jsx";
+import PageLoader from "../../components/ui/PageLoader.jsx";
+import EmptyState from "../../components/ui/EmptyState.jsx";
 import { checkInApi } from "../../api/checkInApi.js";
 import { getApiErrorMessage } from "../../utils/errorParser.js";
 import { formatDateTime } from "../../utils/dateUtils.js";
@@ -119,14 +121,9 @@ export default function CheckInsPage() {
           </div>
 
           {loading ? (
-            <section className="empty-dashboard glass-card">
-              <h3>Loading check-ins...</h3>
-            </section>
+            <PageLoader title="Loading check-ins..." text="Fetching recent check-in history." />
           ) : checkIns.length === 0 ? (
-            <section className="empty-dashboard glass-card">
-              <h3>No check-ins yet</h3>
-              <p className="muted">Your check-in history will appear here.</p>
-            </section>
+            <EmptyState title="No check-ins yet" text="Your check-in history will appear here." />
           ) : (
             <div className="timeline-list">
               {checkIns.map((item) => (

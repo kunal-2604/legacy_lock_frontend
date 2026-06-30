@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import AppLayout from "../../layouts/AppLayout.jsx";
 import StatusPill from "../../components/ui/StatusPill.jsx";
 import SubmitButton from "../../components/ui/SubmitButton.jsx";
+import PageLoader from "../../components/ui/PageLoader.jsx";
+import EmptyState from "../../components/ui/EmptyState.jsx";
 import FileUploadPanel from "../../components/files/FileUploadPanel.jsx";
 import FileListPanel from "../../components/files/FileListPanel.jsx";
 import AssignReceiversPanel from "../../components/receiver/AssignReceiversPanel.jsx";
@@ -119,14 +121,13 @@ export default function CapsuleDetailPage() {
       </section>
 
       {loading ? (
-        <section className="empty-dashboard glass-card">
-          <h3>Loading secure capsule...</h3>
-        </section>
+        <PageLoader title="Loading capsules..." text="Fetching your secure capsule list." />
       ) : !capsule ? (
-        <section className="empty-dashboard glass-card">
-          <h3>Capsule not found</h3>
-          <p className="muted">The capsule may have been removed or is unavailable.</p>
-        </section>
+        <EmptyState
+          eyebrow="Capsule"
+          title="Capsule not found"
+          text="The capsule may have been removed or is unavailable."
+        />
       ) : (
         <>
           <section className="detail-summary-grid">

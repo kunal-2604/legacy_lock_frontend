@@ -1,18 +1,32 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { authApi } from "../api/authApi";
-import { tokenStorage } from "../utils/tokenStorage";
+import { authApi } from "../api/authApi.js";
+import { tokenStorage } from "../utils/tokenStorage.js";
 import { extractRolesFromJwt } from "../utils/jwtUtils.js";
 
 const AuthContext = createContext(null);
 
+function normalizeRoleInput(roles) {
+  if (Array.isArray(roles)) return roles;
+
+  return String(roles || "")
+    .replace("[", "")
+    .replace("]", "")
+    .split(/[,\s]+/)
+    .map((role) => role.trim())
+    .filter(Boolean);
+}
+
 function buildUserFromAuthResponse(data) {
+  const responseRoles = normalizeRoleInput(data.roles || data.role || data.authorities);
+  const jwtRoles = extractRolesFromJwt(data.accessToken);
+
   return {
-    id: data.id || data.userId || null,
-    name: data.name || "",
-    email: data.email || "",
-    roles: data.roles || [],
+    id: data.id || data.userId || data.user?.id || null,
+    name: data.name || data.user?.name || "",
+    email: data.email || data.user?.email || "",
+    roles: responseRoles.length > 0 ? responseRoles : jwtRoles,
     tokenType: data.tokenType || "Bearer",
   };
 }
@@ -41,17 +55,8 @@ export function AuthProvider({ children }) {
   }
 
   function saveOAuthSession(data) {
-    const rolesFromQuery = Array.isArray(data.roles)
-      ? data.roles
-      : String(data.roles || "")
-          .replace("[", "")
-          .replace("]", "")
-          .split(/[,\s]+/)
-          .map((role) => role.trim())
-          .filter(Boolean);
-
+    const rolesFromQuery = normalizeRoleInput(data.roles || data.role || data.authorities);
     const rolesFromJwt = extractRolesFromJwt(data.accessToken);
-
     const finalRoles = rolesFromQuery.length > 0 ? rolesFromQuery : rolesFromJwt;
 
     const nextUser = {

@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import AppLayout from "../../layouts/AppLayout.jsx";
+import EmptyState from "../../components/ui/EmptyState.jsx";
 import { receiverCapsuleApi } from "../../api/receiverCapsuleApi.js";
 
 export default function ReceiverDashboard() {
@@ -84,21 +85,16 @@ export default function ReceiverDashboard() {
       </section>
 
       {capsules.length === 0 && !loading ? (
-        <section className="empty-dashboard glass-card">
-          <div className="empty-icon">
-            <MailOpen size={34} />
-          </div>
-
-          <h3>No released capsules yet</h3>
-          <p className="muted">
-            Access appears only after a capsule is released to your account email.
-            Until then, your receiver inbox stays empty and private.
-          </p>
-
-          <Link to="/app" className="glass-button ghost">
-            Back to overview <ArrowRight size={17} />
-          </Link>
-        </section>
+        <EmptyState
+          icon={<MailOpen size={34} />}
+          title="No released capsules yet"
+          text="Access appears only after a capsule is released to your account email. Until then, your receiver inbox stays empty and private."
+          action={
+            <Link to="/app" className="glass-button ghost">
+              Back to overview <ArrowRight size={17} />
+            </Link>
+          }
+        />
       ) : (
         <section className="glass-card recent-receiver-panel">
           <div className="panel-heading-row">

@@ -13,6 +13,8 @@ import { toast } from "sonner";
 
 import AppLayout from "../../layouts/AppLayout.jsx";
 import StatusPill from "../../components/ui/StatusPill.jsx";
+import PageLoader from "../../components/ui/PageLoader.jsx";
+import EmptyState from "../../components/ui/EmptyState.jsx";
 import { releaseApi } from "../../api/releaseApi.js";
 import { getApiErrorMessage } from "../../utils/errorParser.js";
 import { formatDateTime } from "../../utils/dateUtils.js";
@@ -81,17 +83,9 @@ export default function ReleaseStatusPage() {
       </section>
 
       {loading ? (
-        <section className="empty-dashboard glass-card">
-          <h3>Loading release status...</h3>
-          <p className="muted">Checking latest receiver release data.</p>
-        </section>
+        <PageLoader title="Loading release status..." text="Checking latest receiver release data." />
       ) : !status ? (
-        <section className="empty-dashboard glass-card">
-          <h3>No release status available</h3>
-          <p className="muted">
-            Release status may appear after policy and receiver setup.
-          </p>
-        </section>
+        <EmptyState title="No release status available" text="Release status may appear after policy and receiver setup." />
       ) : (
         <>
           <section className="metric-grid receiver-metrics">

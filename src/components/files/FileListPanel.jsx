@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { FileLock2, RefreshCw, ShieldCheck, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
+import ConfirmModal from "../ui/ConfirmModal.jsx";
+import PageLoader from "../ui/PageLoader.jsx";
 import { fileApi } from "../../api/fileApi.js";
 import { getApiErrorMessage } from "../../utils/errorParser.js";
 import { formatDateTime } from "../../utils/dateUtils.js";
@@ -9,6 +11,8 @@ import { formatDateTime } from "../../utils/dateUtils.js";
 export default function FileListPanel({ capsuleId, refreshKey = 0 }) {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fileToDelete, setFileToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   async function loadFiles() {
     setLoading(true);
@@ -27,17 +31,21 @@ export default function FileListPanel({ capsuleId, refreshKey = 0 }) {
     loadFiles();
   }, [capsuleId, refreshKey]);
 
-  async function handleDelete(fileId) {
-    const confirmed = window.confirm("Delete this file from the capsule?");
+  async function handleDeleteConfirmed() {
+    if (!fileToDelete) return;
 
-    if (!confirmed) return;
+    const fileId = fileToDelete.id || fileToDelete.fileId;
+    setDeleting(true);
 
     try {
       await fileApi.remove(capsuleId, fileId);
       toast.success("File deleted.");
+      setFileToDelete(null);
       loadFiles();
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Failed to delete file."));
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -56,7 +64,7 @@ export default function FileListPanel({ capsuleId, refreshKey = 0 }) {
       </div>
 
       {loading ? (
-        <p className="muted">Loading files...</p>
+        <PageLoader title="Loading files..." text="Fetching encrypted attachments." />
       ) : files.length === 0 ? (
         <div className="mini-empty">
           <FileLock2 size={28} />
@@ -91,7 +99,7 @@ export default function FileListPanel({ capsuleId, refreshKey = 0 }) {
                 <button
                   className="icon-danger-button"
                   type="button"
-                  onClick={() => handleDelete(fileId)}
+                  onClick={() => setFileToDelete(file)}
                 >
                   <Trash2 size={16} />
                 </button>
@@ -100,6 +108,18 @@ export default function FileListPanel({ capsuleId, refreshKey = 0 }) {
           })}
         </div>
       )}
+
+      <ConfirmModal
+        open={Boolean(fileToDelete)}
+        title="Delete file?"
+        text={`This will remove ${
+          fileToDelete?.originalFilename || fileToDelete?.filename || "this file"
+        } from this capsule.`}
+        confirmText="Delete File"
+        loading={deleting}
+        onClose={() => setFileToDelete(null)}
+        onConfirm={handleDeleteConfirmed}
+      />
     </section>
   );
 }

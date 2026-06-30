@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import { ProtectedRoute } from "./auth/ProtectedRoute.jsx";
 import { PublicOnlyRoute } from "./auth/PublicOnlyRoute.jsx";
@@ -12,10 +12,9 @@ import ResetPassword from "./pages/public/ResetPassword.jsx";
 import OAuthSuccess from "./pages/public/OAuthSuccess.jsx";
 
 import AppHome from "./pages/AppHome.jsx";
-import OwnerDashboard from "./pages/owner/OwnerDashboard.jsx";
-import ReceiverDashboard from "./pages/receiver/ReceiverDashboard.jsx";
-import AppPlaceholder from "./pages/AppPlaceholder.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
 
+import OwnerDashboard from "./pages/owner/OwnerDashboard.jsx";
 import CapsulesPage from "./pages/owner/CapsulesPage.jsx";
 import NewCapsulePage from "./pages/owner/NewCapsulePage.jsx";
 import CapsuleDetailPage from "./pages/owner/CapsuleDetailPage.jsx";
@@ -23,6 +22,7 @@ import ReceiversPage from "./pages/owner/ReceiversPage.jsx";
 import CheckInsPage from "./pages/owner/CheckInsPage.jsx";
 import ReleaseStatusPage from "./pages/owner/ReleaseStatusPage.jsx";
 
+import ReceiverDashboard from "./pages/receiver/ReceiverDashboard.jsx";
 import ReleasedCapsulesPage from "./pages/receiver/ReleasedCapsulesPage.jsx";
 import ReceiverCapsuleDetailPage from "./pages/receiver/ReceiverCapsuleDetailPage.jsx";
 
@@ -100,6 +100,15 @@ export default function App() {
       />
 
       <Route
+        path="/owner/capsules/:capsuleId/release-status"
+        element={
+          <ProtectedRoute requiredRole="OWNER">
+            <ReleaseStatusPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
         path="/owner/receivers"
         element={
           <ProtectedRoute requiredRole="OWNER">
@@ -118,32 +127,10 @@ export default function App() {
       />
 
       <Route
-        path="/owner/capsules/:capsuleId/release-status"
-        element={
-          <ProtectedRoute requiredRole="OWNER">
-            <ReleaseStatusPage />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
         path="/receiver"
         element={
           <ProtectedRoute requiredRole="RECEIVER">
             <ReceiverDashboard />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/receiver/capsules"
-        element={
-          <ProtectedRoute requiredRole="RECEIVER">
-            <AppPlaceholder
-              area="Receiver Inbox"
-              title="Released capsules coming next"
-              text="Milestone 6 will add released capsule list and detail pages."
-            />
           </ProtectedRoute>
         }
       />
@@ -166,7 +153,7 @@ export default function App() {
         }
       />
 
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

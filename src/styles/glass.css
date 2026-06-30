@@ -107,3 +107,19 @@
 .glass-input::placeholder {
   color: rgba(148, 163, 184, 0.75);
 }
+
+.glass-button.danger {
+  background: rgba(251, 113, 133, 0.14);
+  border-color: rgba(251, 113, 133, 0.38);
+  color: #fecdd3;
+}
+
+.glass-button.danger:hover {
+  box-shadow: 0 18px 40px rgba(251, 113, 133, 0.18);
+}
+
+.glass-button:disabled {
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.65;
+}

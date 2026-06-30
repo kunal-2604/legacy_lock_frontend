@@ -5,6 +5,8 @@ import { toast } from "sonner";
 
 import AppLayout from "../../layouts/AppLayout.jsx";
 import StatusPill from "../../components/ui/StatusPill.jsx";
+import EmptyState from "../../components/ui/EmptyState.jsx";
+import { GridSkeleton } from "../../components/ui/Skeleton.jsx";
 import { receiverCapsuleApi } from "../../api/receiverCapsuleApi.js";
 import { getApiErrorMessage } from "../../utils/errorParser.js";
 import { formatDateTime } from "../../utils/dateUtils.js";
@@ -72,20 +74,14 @@ export default function ReleasedCapsulesPage() {
       </section>
 
       {loading ? (
-        <section className="empty-dashboard glass-card">
-          <h3>Loading receiver inbox...</h3>
-          <p className="muted">Fetching released capsules for your email.</p>
-        </section>
+        <GridSkeleton count={6} />
       ) : filteredCapsules.length === 0 ? (
-        <section className="empty-dashboard glass-card">
-          <div className="empty-icon">
-            <Inbox size={34} />
-          </div>
-          <h3>No released capsules yet</h3>
-          <p className="muted">
-            Access appears only after an owner releases a capsule to your registered email.
-          </p>
-        </section>
+        <EmptyState
+          icon={<Inbox size={34} />}
+          eyebrow="Receiver Inbox"
+          title="No released capsules yet"
+          text="Access appears only after an owner releases a capsule to your registered email."
+        />
       ) : (
         <section className="receiver-capsule-grid">
           {filteredCapsules.map((capsule) => {
