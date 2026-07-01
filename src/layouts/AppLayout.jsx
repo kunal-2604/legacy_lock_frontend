@@ -61,7 +61,7 @@ export default function AppLayout({ children }) {
         </div>
 
         <nav className="sidebar-nav">
-          <NavItem to="/app" icon={<Home size={18} />} label="Overview" />
+          <NavItem to="/app" icon={<Home size={18} />} label="Overview" onNavigate={() => setSidebarOpen(false)} />
 
           {userIsOwner && (
             <>
@@ -71,24 +71,28 @@ export default function AppLayout({ children }) {
                 to="/owner"
                 icon={<Shield size={18} />}
                 label="Dashboard"
+                onNavigate={() => setSidebarOpen(false)}
               />
 
               <NavItem
                 to="/owner/capsules"
                 icon={<FileLock2 size={18} />}
                 label="Capsules"
+                onNavigate={() => setSidebarOpen(false)}
               />
 
               <NavItem
                 to="/owner/receivers"
                 icon={<UserRoundPlus size={18} />}
                 label="Receivers"
+                onNavigate={() => setSidebarOpen(false)}
               />
 
               <NavItem
                 to="/owner/check-ins"
                 icon={<CheckCircle2 size={18} />}
                 label="Check-ins"
+                onNavigate={() => setSidebarOpen(false)}
               />
             </>
           )}
@@ -101,12 +105,14 @@ export default function AppLayout({ children }) {
                 to="/receiver"
                 icon={<Inbox size={18} />}
                 label="Inbox"
+                onNavigate={() => setSidebarOpen(false)}
               />
 
               <NavItem
                 to="/receiver/capsules"
                 icon={<Boxes size={18} />}
                 label="Released Capsules"
+                onNavigate={() => setSidebarOpen(false)}
               />
             </>
           )}
@@ -166,7 +172,7 @@ export default function AppLayout({ children }) {
   );
 }
 
-function NavItem({ to, icon, label }) {
+function NavItem({ to, icon, label, onNavigate }) {
   return (
     <NavLink
       to={to}
@@ -174,6 +180,7 @@ function NavItem({ to, icon, label }) {
       className={({ isActive }) =>
         isActive ? "sidebar-link active" : "sidebar-link"
       }
+      onClick={onNavigate}
     >
       {icon}
       <span>{label}</span>
